@@ -30,6 +30,7 @@
         {
             tabControl = new TabControl();
             tabPage1 = new TabPage();
+            lbCurrentDate = new Label();
             addAppPanel = new Panel();
             label2 = new Label();
             cbEndDate = new ComboBox();
@@ -59,17 +60,35 @@
             label1 = new Label();
             button1 = new Button();
             tabPage2 = new TabPage();
+            btExport = new Button();
+            lbContactStatus = new Label();
+            tbSearchBox = new TextBox();
+            btAddContact = new Button();
+            contactInfoPanel = new Panel();
+            lbEmail = new LinkLabel();
+            lbPhone = new Label();
+            lbName = new Label();
+            btDeleteContact = new Button();
+            btEditContact = new Button();
+            editContactPanel = new Panel();
+            tbEmail = new TextBox();
+            tbPhone = new TextBox();
+            btDiscardContact = new Button();
+            btConfirmContact = new Button();
+            tbName = new TextBox();
+            lvContacts = new ListView();
             tabPage3 = new TabPage();
             btFireNotification = new Button();
             btTestNotification = new Button();
-            dataGridView1 = new DataGridView();
+            btImport = new Button();
             tabControl.SuspendLayout();
             tabPage1.SuspendLayout();
             addAppPanel.SuspendLayout();
             appInfoPanel.SuspendLayout();
             tabPage2.SuspendLayout();
+            contactInfoPanel.SuspendLayout();
+            editContactPanel.SuspendLayout();
             tabPage3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
             // tabControl
@@ -85,6 +104,7 @@
             // 
             // tabPage1
             // 
+            tabPage1.Controls.Add(lbCurrentDate);
             tabPage1.Controls.Add(addAppPanel);
             tabPage1.Controls.Add(statusLabel);
             tabPage1.Controls.Add(appInfoPanel);
@@ -103,6 +123,16 @@
             tabPage1.Text = "Calendar";
             tabPage1.UseVisualStyleBackColor = true;
             // 
+            // lbCurrentDate
+            // 
+            lbCurrentDate.AutoSize = true;
+            lbCurrentDate.Font = new Font("Segoe UI", 10F, FontStyle.Regular, GraphicsUnit.Point);
+            lbCurrentDate.Location = new Point(266, 14);
+            lbCurrentDate.Name = "lbCurrentDate";
+            lbCurrentDate.Size = new Size(90, 23);
+            lbCurrentDate.TabIndex = 14;
+            lbCurrentDate.Text = "01.01.2023";
+            // 
             // addAppPanel
             // 
             addAppPanel.Controls.Add(label2);
@@ -116,7 +146,7 @@
             addAppPanel.Controls.Add(tbAllDayEdit);
             addAppPanel.Controls.Add(lbDate);
             addAppPanel.Controls.Add(tbDescription);
-            addAppPanel.Location = new Point(391, 14);
+            addAppPanel.Location = new Point(391, 6);
             addAppPanel.Name = "addAppPanel";
             addAppPanel.Size = new Size(388, 263);
             addAppPanel.TabIndex = 9;
@@ -238,7 +268,7 @@
             appInfoPanel.Controls.Add(appDate);
             appInfoPanel.Controls.Add(appDescriptionBox);
             appInfoPanel.Controls.Add(appTitle);
-            appInfoPanel.Location = new Point(394, 14);
+            appInfoPanel.Location = new Point(391, 14);
             appInfoPanel.Name = "appInfoPanel";
             appInfoPanel.Size = new Size(388, 263);
             appInfoPanel.TabIndex = 8;
@@ -246,7 +276,8 @@
             // tbAllDayInfo
             // 
             tbAllDayInfo.AutoSize = true;
-            tbAllDayInfo.Location = new Point(257, 110);
+            tbAllDayInfo.Enabled = false;
+            tbAllDayInfo.Location = new Point(262, 132);
             tbAllDayInfo.Name = "tbAllDayInfo";
             tbAllDayInfo.Size = new Size(111, 24);
             tbAllDayInfo.TabIndex = 13;
@@ -387,7 +418,14 @@
             // 
             // tabPage2
             // 
-            tabPage2.Controls.Add(dataGridView1);
+            tabPage2.Controls.Add(btImport);
+            tabPage2.Controls.Add(btExport);
+            tabPage2.Controls.Add(lbContactStatus);
+            tabPage2.Controls.Add(tbSearchBox);
+            tabPage2.Controls.Add(btAddContact);
+            tabPage2.Controls.Add(contactInfoPanel);
+            tabPage2.Controls.Add(editContactPanel);
+            tabPage2.Controls.Add(lvContacts);
             tabPage2.Location = new Point(4, 29);
             tabPage2.Name = "tabPage2";
             tabPage2.Padding = new Padding(3);
@@ -395,6 +433,168 @@
             tabPage2.TabIndex = 1;
             tabPage2.Text = "Contacts";
             tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // btExport
+            // 
+            btExport.Location = new Point(685, 553);
+            btExport.Name = "btExport";
+            btExport.Size = new Size(94, 29);
+            btExport.TabIndex = 16;
+            btExport.Text = "Export contacts";
+            btExport.UseVisualStyleBackColor = true;
+            btExport.Click += btExport_Click;
+            // 
+            // lbContactStatus
+            // 
+            lbContactStatus.AutoSize = true;
+            lbContactStatus.Location = new Point(8, 324);
+            lbContactStatus.Name = "lbContactStatus";
+            lbContactStatus.Size = new Size(42, 20);
+            lbContactStatus.TabIndex = 15;
+            lbContactStatus.Text = "label";
+            // 
+            // tbSearchBox
+            // 
+            tbSearchBox.Location = new Point(8, 6);
+            tbSearchBox.Name = "tbSearchBox";
+            tbSearchBox.Size = new Size(236, 27);
+            tbSearchBox.TabIndex = 13;
+            tbSearchBox.TextChanged += tbSearchBox_TextChanged;
+            // 
+            // btAddContact
+            // 
+            btAddContact.Location = new Point(668, 288);
+            btAddContact.Name = "btAddContact";
+            btAddContact.Size = new Size(94, 29);
+            btAddContact.TabIndex = 12;
+            btAddContact.Text = "Add";
+            btAddContact.UseVisualStyleBackColor = true;
+            btAddContact.Click += btAddContact_Click;
+            // 
+            // contactInfoPanel
+            // 
+            contactInfoPanel.Controls.Add(lbEmail);
+            contactInfoPanel.Controls.Add(lbPhone);
+            contactInfoPanel.Controls.Add(lbName);
+            contactInfoPanel.Controls.Add(btDeleteContact);
+            contactInfoPanel.Controls.Add(btEditContact);
+            contactInfoPanel.Location = new Point(391, 10);
+            contactInfoPanel.Name = "contactInfoPanel";
+            contactInfoPanel.Size = new Size(388, 207);
+            contactInfoPanel.TabIndex = 11;
+            // 
+            // lbEmail
+            // 
+            lbEmail.AutoSize = true;
+            lbEmail.Location = new Point(9, 82);
+            lbEmail.Name = "lbEmail";
+            lbEmail.Size = new Size(46, 20);
+            lbEmail.TabIndex = 12;
+            lbEmail.TabStop = true;
+            lbEmail.Text = "Email";
+            // 
+            // lbPhone
+            // 
+            lbPhone.AutoSize = true;
+            lbPhone.Location = new Point(9, 49);
+            lbPhone.Name = "lbPhone";
+            lbPhone.Size = new Size(50, 20);
+            lbPhone.TabIndex = 11;
+            lbPhone.Text = "Phone";
+            // 
+            // lbName
+            // 
+            lbName.AutoSize = true;
+            lbName.Location = new Point(9, 14);
+            lbName.Name = "lbName";
+            lbName.Size = new Size(49, 20);
+            lbName.TabIndex = 10;
+            lbName.Text = "Name";
+            // 
+            // btDeleteContact
+            // 
+            btDeleteContact.Location = new Point(274, 158);
+            btDeleteContact.Name = "btDeleteContact";
+            btDeleteContact.Size = new Size(94, 29);
+            btDeleteContact.TabIndex = 9;
+            btDeleteContact.Text = "Delete";
+            btDeleteContact.UseVisualStyleBackColor = true;
+            btDeleteContact.Click += btDeleteContact_Click;
+            // 
+            // btEditContact
+            // 
+            btEditContact.Location = new Point(161, 158);
+            btEditContact.Name = "btEditContact";
+            btEditContact.Size = new Size(94, 29);
+            btEditContact.TabIndex = 8;
+            btEditContact.Text = "Edit";
+            btEditContact.UseVisualStyleBackColor = true;
+            btEditContact.Click += btEditContact_Click;
+            // 
+            // editContactPanel
+            // 
+            editContactPanel.Controls.Add(tbEmail);
+            editContactPanel.Controls.Add(tbPhone);
+            editContactPanel.Controls.Add(btDiscardContact);
+            editContactPanel.Controls.Add(btConfirmContact);
+            editContactPanel.Controls.Add(tbName);
+            editContactPanel.Location = new Point(394, 10);
+            editContactPanel.Name = "editContactPanel";
+            editContactPanel.Size = new Size(388, 207);
+            editContactPanel.TabIndex = 10;
+            // 
+            // tbEmail
+            // 
+            tbEmail.Location = new Point(17, 114);
+            tbEmail.Name = "tbEmail";
+            tbEmail.Size = new Size(351, 27);
+            tbEmail.TabIndex = 11;
+            tbEmail.Text = "Email";
+            // 
+            // tbPhone
+            // 
+            tbPhone.Location = new Point(17, 57);
+            tbPhone.Name = "tbPhone";
+            tbPhone.Size = new Size(351, 27);
+            tbPhone.TabIndex = 10;
+            tbPhone.Text = "Phone";
+            // 
+            // btDiscardContact
+            // 
+            btDiscardContact.Location = new Point(274, 158);
+            btDiscardContact.Name = "btDiscardContact";
+            btDiscardContact.Size = new Size(94, 29);
+            btDiscardContact.TabIndex = 9;
+            btDiscardContact.Text = "Discard";
+            btDiscardContact.UseVisualStyleBackColor = true;
+            btDiscardContact.Click += btDiscardContact_Click;
+            // 
+            // btConfirmContact
+            // 
+            btConfirmContact.Location = new Point(161, 158);
+            btConfirmContact.Name = "btConfirmContact";
+            btConfirmContact.Size = new Size(94, 29);
+            btConfirmContact.TabIndex = 8;
+            btConfirmContact.Text = "Confirm";
+            btConfirmContact.UseVisualStyleBackColor = true;
+            btConfirmContact.Click += btConfirmContact_Click;
+            // 
+            // tbName
+            // 
+            tbName.Location = new Point(17, 9);
+            tbName.Name = "tbName";
+            tbName.Size = new Size(351, 27);
+            tbName.TabIndex = 6;
+            tbName.Text = "Name";
+            // 
+            // lvContacts
+            // 
+            lvContacts.Location = new Point(8, 39);
+            lvContacts.Name = "lvContacts";
+            lvContacts.Size = new Size(236, 267);
+            lvContacts.TabIndex = 0;
+            lvContacts.UseCompatibleStateImageBehavior = false;
+            lvContacts.SelectedIndexChanged += lvContacts_SelectedIndexChanged;
             // 
             // tabPage3
             // 
@@ -427,15 +627,15 @@
             btTestNotification.UseVisualStyleBackColor = true;
             btTestNotification.Click += btTestNotification_Click;
             // 
-            // dataGridView1
+            // btImport
             // 
-            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Location = new Point(6, 6);
-            dataGridView1.Name = "dataGridView1";
-            dataGridView1.RowHeadersWidth = 51;
-            dataGridView1.RowTemplate.Height = 29;
-            dataGridView1.Size = new Size(402, 351);
-            dataGridView1.TabIndex = 0;
+            btImport.Location = new Point(585, 553);
+            btImport.Name = "btImport";
+            btImport.Size = new Size(94, 29);
+            btImport.TabIndex = 17;
+            btImport.Text = "Import";
+            btImport.UseVisualStyleBackColor = true;
+            btImport.Click += btImport_Click;
             // 
             // Form1
             // 
@@ -453,8 +653,12 @@
             appInfoPanel.ResumeLayout(false);
             appInfoPanel.PerformLayout();
             tabPage2.ResumeLayout(false);
+            tabPage2.PerformLayout();
+            contactInfoPanel.ResumeLayout(false);
+            contactInfoPanel.PerformLayout();
+            editContactPanel.ResumeLayout(false);
+            editContactPanel.PerformLayout();
             tabPage3.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);
         }
 
@@ -494,6 +698,24 @@
         private TabPage tabPage3;
         private Button btTestNotification;
         private Button btFireNotification;
-        private DataGridView dataGridView1;
+        private Panel editContactPanel;
+        private Button btDiscardContact;
+        private Button btConfirmContact;
+        private TextBox tbName;
+        private ListView lvContacts;
+        private Panel contactInfoPanel;
+        private Button btDeleteContact;
+        private Button btEditContact;
+        private TextBox tbEmail;
+        private TextBox tbPhone;
+        private Label lbPhone;
+        private Label lbName;
+        private Button btAddContact;
+        private LinkLabel lbEmail;
+        private TextBox tbSearchBox;
+        private Label lbContactStatus;
+        private Label lbCurrentDate;
+        private Button btExport;
+        private Button btImport;
     }
 }

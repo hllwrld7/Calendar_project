@@ -1,10 +1,4 @@
-﻿using CalendarAPI.DataTypes;
-using CalendarAPI.Interfaces;
-using Common;
-using Quartz;
-using Quartz.Impl;
-using System.Data.SQLite;
-using Windows.ApplicationModel.Appointments;
+﻿using CalendarAPI.Interfaces;
 
 namespace CalendarAPI.Services
 {
@@ -22,20 +16,21 @@ namespace CalendarAPI.Services
             _schedulingService = schedulingService;
         }
 
-        public void AddAppointment(IAppointment appointment, out string result)
+        public void AddAppointment(DataTypes.Appointment appointment, out string result)
         {
             result = "Appointment added successfully!";
             if (!IsDateRangeValid(appointment))
             {
-                result = "Date is invalid, has a conflict with other appointments";
+                result = "Date is invalid.";
                 return;
             }
             _appointments.Add((DataTypes.Appointment)appointment);
             _sqliteService.WriteAppointment((DataTypes.Appointment)appointment);
+            ScheduleNotification(appointment);
             _schedulingService.ScheduleNotification(appointment.Title, appointment.Id, appointment.StartDate.AddMinutes(-15));
         }
 
-        public void EditAppointment(IAppointment appToUpdate, out string result) 
+        public void EditAppointment(DataTypes.Appointment appToUpdate, out string result) 
         {
             result = "Appointment edited successfully";
             if (!IsDateRangeValid(appToUpdate, appToUpdate.Id))
@@ -50,11 +45,12 @@ namespace CalendarAPI.Services
                 return;
             }
             _appointments[appToUpdateIndex] = (DataTypes.Appointment)appToUpdate;
+            _sqliteService.UpdateAppointment(appToUpdate);
             _schedulingService.UnscheduleNotification(appToUpdate.Id);
             _schedulingService.ScheduleNotification(appToUpdate.Title, appToUpdate.Id, appToUpdate.StartDate.AddMinutes(-15));
         }
 
-        public void DeleteAppointment(IAppointment appointment, out string result)
+        public void DeleteAppointment(DataTypes.Appointment appointment, out string result)
         {
             result = "Appointment deleted successfully";
             var appToRemoveIndex = _appointments.FindIndex(app => app.Id == appointment.Id);
@@ -68,8 +64,10 @@ namespace CalendarAPI.Services
             _schedulingService.UnscheduleNotification(appointment.Id);
         }
 
-        private bool IsDateRangeValid(IAppointment appointment, int idToExclude = -1)
+        private bool IsDateRangeValid(DataTypes.Appointment appointment, int idToExclude = -1)
         {
+            if (appointment.StartDate < DateTime.Now || (appointment.StartDate < DateTime.Now && !appointment.IsAllDay))
+                return false;
             foreach(var existingApp in _appointments) 
             {
                 if (existingApp.Id == idToExclude)
@@ -85,6 +83,15 @@ namespace CalendarAPI.Services
                     return false;
             }
             return true;
+        }
+
+        private void ScheduleNotification(DataTypes.Appointment appointment)
+        {
+            var time = appointment.StartDate.AddMinutes(-15);
+            if(time < DateTime.Now)
+                time = DateTime.Now.AddMinutes(1);
+
+            _schedulingService.ScheduleNotification(appointment.Title, appointment.Id, time);
         }
     }
 }

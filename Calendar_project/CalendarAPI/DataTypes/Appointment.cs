@@ -1,8 +1,6 @@
-using Common;
-
 namespace CalendarAPI.DataTypes
 {
-    public class Appointment : IAppointment
+    public class Appointment
     {
         public string Title { get; set; }
         public string Description { get; set; }
@@ -37,9 +35,6 @@ namespace CalendarAPI.DataTypes
             IsLocationOnline = isLocationOnline;
         }
 
-        public Appointment()
-        {
-
-        }
+        public Appointment() { }
     }
 }

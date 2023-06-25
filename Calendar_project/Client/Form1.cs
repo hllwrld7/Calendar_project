@@ -1,32 +1,57 @@
-using Common;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq.Expressions;
-using System.Runtime.ExceptionServices;
+using System.Text.RegularExpressions;
 
 namespace Client
 {
     public partial class Form1 : Form
     {
         private AppointmentManagementService _appoinmentManagementService;
+        private ContactManagementService _contactManagementService;
         private SettingsService _settingsService;
         private bool _panelIsInAddMode = true;
         private Dictionary<string, Appointment> _currentAppointments = new Dictionary<string, Appointment>();
         private Appointment _currentAppointment = null;
+        private Contact _currentContact = null;
         private DateTime _currentDate;
+        private bool _contactPanelIsInAddMode = true;
+        private List<string> _currentContactNames = new();
 
         public Form1()
         {
             InitializeComponent();
             _appoinmentManagementService = new AppointmentManagementService();
+            _contactManagementService = new ContactManagementService();
             _settingsService = new SettingsService();
+            SetCurrentDate(DateTime.Now);
             PopulateButtons(DateTime.Today);
             PopulateComboBox();
+            PopulateListView();
             appInfoPanel.Visible = false;
             addAppPanel.Visible = false;
             statusLabel.Visible = false;
             statusLabel.Visible = false;
+            lbContactStatus.Visible = false;
+            contactInfoPanel.Visible = false;
+            editContactPanel.Visible = false;
+            lvContacts.View = View.List;
             ClearAddAppointmentPanel();
+        }
+
+        private void PopulateListView()
+        {
+            var contacts = _contactManagementService.GetContacts().Result;
+            _currentContactNames.Clear();
+            _currentContactNames.AddRange(contacts.Select(x => x.Name));
+            AddItemsToListView();
+        }
+
+        private void AddItemsToListView()
+        {
+            lvContacts.Items.Clear();
+            var listViewItems = new List<ListViewItem>();
+            foreach (var contact in _currentContactNames)
+                listViewItems.Add(new ListViewItem(contact));
+
+            lvContacts.Items.AddRange(listViewItems.ToArray());
         }
 
         private void PopulateComboBox()
@@ -107,6 +132,7 @@ namespace Client
         {
             appInfoPanel.Visible = false;
             addAppPanel.Visible = true;
+            _panelIsInAddMode = true;
             ClearAddAppointmentPanel();
         }
 
@@ -130,10 +156,17 @@ namespace Client
 
         private void monthCalendar1_DateSelected(object sender, DateRangeEventArgs e)
         {
-            _currentDate = e.Start;
-            lbDate.Text = $"{_currentDate.Day}.{_currentDate.Month}.{_currentDate.Year}";
+            SetCurrentDate(e.Start);
             appDate.Text = _currentDate.ToString();
             PopulateButtons(e.Start);
+        }
+
+        private void SetCurrentDate(DateTime date)
+        {
+            _currentDate = date;
+            var shortDate = $"{date.Day}.{date.Month}.{date.Year}";
+            lbDate.Text = shortDate;
+            lbCurrentDate.Text = shortDate;
         }
 
         private void appointment_Click(object sender, EventArgs e)
@@ -254,6 +287,7 @@ namespace Client
             statusLabel.Text = result;
             statusLabel.Visible = true;
             PopulateButtons(_currentDate);
+            appInfoPanel.Visible = false;
         }
 
         private void discardAppointment_Click(object sender, EventArgs e)
@@ -347,6 +381,113 @@ namespace Client
         private void btFireNotification_Click(object sender, EventArgs e)
         {
             _settingsService.FireNotification();
+        }
+
+        private void tbSearchBox_TextChanged(object sender, EventArgs e)
+        {
+            Regex regex = new Regex(tbSearchBox.Text);
+            _currentContactNames = _currentContactNames.OrderBy(x => regex.IsMatch(x)).Reverse().ToList();
+            AddItemsToListView();
+        }
+
+        private void lvContacts_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (sender is ListView)
+            {
+                var lv = sender as ListView;
+                if (lv.SelectedItems.Count == 0)
+                    return;
+                _currentContact = _contactManagementService.GetContactByName(lv.SelectedItems[0].Text);
+                SetContactInfoPanel(_currentContact.Name);
+            }
+        }
+
+        private void SetContactInfoPanel(string contactName)
+        {
+            contactInfoPanel.Visible = true;
+            editContactPanel.Visible = false;
+            var contactInfo = _contactManagementService.GetContactByName(contactName);
+            lbName.Text = contactInfo.Name;
+            lbPhone.Text = contactInfo.PhoneNumber;
+            lbEmail.Text = contactInfo.Email;
+        }
+
+        private async void btDeleteContact_Click(object sender, EventArgs e)
+        {
+            if (lvContacts.SelectedItems.Count == 0) return;
+
+            lbContactStatus.Visible = true;
+            lbContactStatus.Text = await _contactManagementService.DeleteContact(_currentContact);
+            PopulateListView();
+            contactInfoPanel.Visible = false;
+        }
+
+        private void btEditContact_Click(object sender, EventArgs e)
+        {
+            if (_currentContact == null) return;
+            _contactPanelIsInAddMode = false;
+            SetContactEditPanel(_currentContact.Name);
+        }
+
+        private void SetContactEditPanel(string contactName = "")
+        {
+            contactInfoPanel.Visible = false;
+            editContactPanel.Visible = true;
+            var contactInfo = _contactManagementService.GetContactByName(contactName);
+            tbName.Text = contactInfo.Name;
+            tbPhone.Text = contactInfo.PhoneNumber;
+            tbEmail.Text = contactInfo.Email;
+        }
+
+        private void btDiscardContact_Click(object sender, EventArgs e)
+        {
+            ResetContactEditPanel();
+        }
+
+        private void ResetContactEditPanel()
+        {
+            lbContactStatus.Visible = false;
+            tbName.Text = "Name";
+            tbPhone.Text = "Phone";
+            tbEmail.Text = "Email";
+        }
+
+        private async void btConfirmContact_Click(object sender, EventArgs e)
+        {
+            lbContactStatus.Visible = true;
+            var contact = new Contact(tbName.Text, tbPhone.Text, tbEmail.Text);
+            if (_contactPanelIsInAddMode)
+            {
+                contact.Id = _contactManagementService.GetNewId();
+                lbContactStatus.Text = await _contactManagementService.AddContact(
+                    contact);
+            }
+            else
+            {
+                contact.Id = _currentContact.Id;
+                lbContactStatus.Text = await _contactManagementService.EditContact(contact);
+            }
+
+            PopulateListView();
+        }
+
+        private void btAddContact_Click(object sender, EventArgs e)
+        {
+            _contactPanelIsInAddMode = true;
+            SetContactEditPanel();
+        }
+
+        private void btExport_Click(object sender, EventArgs e)
+        {
+            lbContactStatus.Visible = true;
+            lbContactStatus.Text = _contactManagementService.ExportContacts();
+        }
+
+        private async void btImport_Click(object sender, EventArgs e)
+        {
+            lbContactStatus.Visible = true;
+            lbContactStatus.Text = await _contactManagementService.ImportContacts();
+            PopulateListView();
         }
     }
 }

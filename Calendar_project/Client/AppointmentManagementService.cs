@@ -1,15 +1,6 @@
-﻿using Common;
-using Newtonsoft.Json;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace Client
 {
@@ -21,7 +12,6 @@ namespace Client
 
         public AppointmentManagementService() 
         {
-            // get all appoinments
             _httpClient = new HttpClient() { BaseAddress = new Uri(_apiUrl) };
             _httpClient.DefaultRequestHeaders.Accept.Clear();
             _httpClient.DefaultRequestHeaders.Accept.Add(
@@ -45,7 +35,7 @@ namespace Client
             }
         }
 
-        public async Task<string> AddAppointment(IAppointment appointment)
+        public async Task<string> AddAppointment(Appointment appointment)
         {
             if (GetAppointmentsForTheDay(appointment.StartDate).Count >= 4)
                 return "Can't add more than 4 appointments for a day";
@@ -98,7 +88,7 @@ namespace Client
         }
     }
 
-    interface IAppointmentList
+    interface AppointmentList
     {
         public List<Appointment> Appointments { get; }
     }

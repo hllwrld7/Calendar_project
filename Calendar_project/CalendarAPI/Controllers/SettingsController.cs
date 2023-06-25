@@ -1,10 +1,6 @@
-using CalendarAPI.DataTypes;
 using CalendarAPI.Interfaces;
-using CalendarAPI.Services;
-using Common;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Toolkit.Uwp.Notifications;
-using Quartz;
 
 namespace CalendarAPI.Controllers
 {

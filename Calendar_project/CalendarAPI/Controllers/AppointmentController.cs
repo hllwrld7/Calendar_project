@@ -1,7 +1,6 @@
 using CalendarAPI.DataTypes;
 using CalendarAPI.Interfaces;
 using CalendarAPI.Services;
-using Common;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CalendarAPI.Controllers
