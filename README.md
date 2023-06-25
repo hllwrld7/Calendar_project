@@ -1,5 +1,12 @@
 # Calendar_project
 Calendar project for my Object Oriented programming classes.
+
+Technologies used:
+• ASP.NET Core
+• Entity Framework
+• Quartz .NET
+• SQLite databases
+
 Requirements:
 • Possibility to manage the meetings:
 - adding the meeting info

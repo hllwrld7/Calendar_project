@@ -14,7 +14,7 @@ namespace CalendarAPI
         {
             var folder = Environment.SpecialFolder.LocalApplicationData;
             var path = Environment.GetFolderPath(folder);
-            _dbPath = Path.Join(path, "blogging.db");
+            _dbPath = Path.Join(path);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
