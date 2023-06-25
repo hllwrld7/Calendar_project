@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             tabControl = new TabControl();
             tabPage1 = new TabPage();
             lbCurrentDate = new Label();
@@ -60,6 +61,7 @@
             label1 = new Label();
             button1 = new Button();
             tabPage2 = new TabPage();
+            btImport = new Button();
             btExport = new Button();
             lbContactStatus = new Label();
             tbSearchBox = new TextBox();
@@ -80,7 +82,6 @@
             tabPage3 = new TabPage();
             btFireNotification = new Button();
             btTestNotification = new Button();
-            btImport = new Button();
             tabControl.SuspendLayout();
             tabPage1.SuspendLayout();
             addAppPanel.SuspendLayout();
@@ -146,7 +147,7 @@
             addAppPanel.Controls.Add(tbAllDayEdit);
             addAppPanel.Controls.Add(lbDate);
             addAppPanel.Controls.Add(tbDescription);
-            addAppPanel.Location = new Point(391, 6);
+            addAppPanel.Location = new Point(388, 11);
             addAppPanel.Name = "addAppPanel";
             addAppPanel.Size = new Size(388, 263);
             addAppPanel.TabIndex = 9;
@@ -221,6 +222,7 @@
             cbIsOnline.TabIndex = 5;
             cbIsOnline.Text = "Online";
             cbIsOnline.UseVisualStyleBackColor = true;
+            cbIsOnline.CheckedChanged += cbIsOnline_CheckedChanged;
             // 
             // tbAllDayEdit
             // 
@@ -434,6 +436,16 @@
             tabPage2.Text = "Contacts";
             tabPage2.UseVisualStyleBackColor = true;
             // 
+            // btImport
+            // 
+            btImport.Location = new Point(585, 553);
+            btImport.Name = "btImport";
+            btImport.Size = new Size(94, 29);
+            btImport.TabIndex = 17;
+            btImport.Text = "Import";
+            btImport.UseVisualStyleBackColor = true;
+            btImport.Click += btImport_Click;
+            // 
             // btExport
             // 
             btExport.Location = new Point(685, 553);
@@ -627,22 +639,13 @@
             btTestNotification.UseVisualStyleBackColor = true;
             btTestNotification.Click += btTestNotification_Click;
             // 
-            // btImport
-            // 
-            btImport.Location = new Point(585, 553);
-            btImport.Name = "btImport";
-            btImport.Size = new Size(94, 29);
-            btImport.TabIndex = 17;
-            btImport.Text = "Import";
-            btImport.UseVisualStyleBackColor = true;
-            btImport.Click += btImport_Click;
-            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 623);
             Controls.Add(tabControl);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "Form1";
             Text = "Calendar";
             tabControl.ResumeLayout(false);

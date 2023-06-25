@@ -27,7 +27,7 @@ namespace CalendarAPI.Services
             _appointments.Add((DataTypes.Appointment)appointment);
             _sqliteService.WriteAppointment((DataTypes.Appointment)appointment);
             ScheduleNotification(appointment);
-            _schedulingService.ScheduleNotification(appointment.Title, appointment.Id, appointment.StartDate.AddMinutes(-15));
+            _schedulingService.ScheduleNotification(appointment, appointment.StartDate.AddMinutes(-15));
         }
 
         public void EditAppointment(DataTypes.Appointment appToUpdate, out string result) 
@@ -47,7 +47,7 @@ namespace CalendarAPI.Services
             _appointments[appToUpdateIndex] = (DataTypes.Appointment)appToUpdate;
             _sqliteService.UpdateAppointment(appToUpdate);
             _schedulingService.UnscheduleNotification(appToUpdate.Id);
-            _schedulingService.ScheduleNotification(appToUpdate.Title, appToUpdate.Id, appToUpdate.StartDate.AddMinutes(-15));
+            _schedulingService.ScheduleNotification(appToUpdate, appToUpdate.StartDate.AddMinutes(-15));
         }
 
         public void DeleteAppointment(DataTypes.Appointment appointment, out string result)
@@ -91,7 +91,7 @@ namespace CalendarAPI.Services
             if(time < DateTime.Now)
                 time = DateTime.Now.AddMinutes(1);
 
-            _schedulingService.ScheduleNotification(appointment.Title, appointment.Id, time);
+            _schedulingService.ScheduleNotification(appointment, time);
         }
     }
 }

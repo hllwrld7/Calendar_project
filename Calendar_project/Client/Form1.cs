@@ -158,6 +158,7 @@ namespace Client
         {
             SetCurrentDate(e.Start);
             appDate.Text = _currentDate.ToString();
+            appInfoPanel.Visible = false;
             PopulateButtons(e.Start);
         }
 
@@ -488,6 +489,14 @@ namespace Client
             lbContactStatus.Visible = true;
             lbContactStatus.Text = await _contactManagementService.ImportContacts();
             PopulateListView();
+        }
+
+        private void cbIsOnline_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cbIsOnline.Checked)
+                tbLocation.Enabled = false;
+            else
+                tbLocation.Enabled = true;
         }
     }
 }

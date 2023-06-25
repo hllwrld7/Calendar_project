@@ -1,7 +1,5 @@
-﻿using CalendarAPI.Interfaces;
-using Microsoft.Toolkit.Uwp.Notifications;
+﻿using Microsoft.Toolkit.Uwp.Notifications;
 using Quartz;
-using System.Data.Entity.Validation;
 
 namespace CalendarAPI
 {
@@ -11,9 +9,13 @@ namespace CalendarAPI
         public Task Execute(IJobExecutionContext context)
         {
             JobDataMap dataMap = context.JobDetail.JobDataMap;
-            var appTitle = dataMap["AppointmentTitle"];
+            var appTitle = dataMap["Title"];
+            var appLocation = dataMap["Location"];
+            var appStart = dataMap["StartTime"];
             new ToastContentBuilder()
             .AddText(appTitle.ToString())
+            .AddText(appLocation.ToString())
+            .AddText(appStart.ToString())
             .Show();
             return Task.CompletedTask;
         }

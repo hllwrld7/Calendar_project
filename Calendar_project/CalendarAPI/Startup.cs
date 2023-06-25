@@ -37,7 +37,7 @@ namespace CalendarAPI
             if (time < DateTime.Now)
                 time = DateTime.Now.AddMinutes(1);
 
-            schedulingService.ScheduleNotification(appointment.Title, appointment.Id, time);
+            schedulingService.ScheduleNotification(appointment, time);
         }
 
         private bool IsDateValid(DateTime date) 

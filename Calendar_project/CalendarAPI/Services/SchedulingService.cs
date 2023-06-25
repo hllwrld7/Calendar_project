@@ -3,6 +3,7 @@ using Quartz.Impl;
 using Quartz;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Quartz.Spi;
+using CalendarAPI.DataTypes;
 
 namespace CalendarAPI.Services
 {
@@ -22,15 +23,19 @@ namespace CalendarAPI.Services
             _scheduler = await factory.GetScheduler();
         }
 
-        public void ScheduleNotification(string appointmentTitle, int appointmentId, DateTime notificationDateTime)
+        public void ScheduleNotification(Appointment appointment, DateTime notificationDateTime)
         {
-            IDictionary<string, object> jobData = new Dictionary<string, object> { { "AppointmentTitle", appointmentTitle } };
+            IDictionary<string, object> jobData = new Dictionary<string, object> {
+                { "Title", appointment.Title },
+                { "Location", appointment.Location },
+                { "StartTime", appointment.IsAllDay ? "All day" : $"at {appointment.StartDate}" }
+            };
             IJobDetail job = JobBuilder.Create<NotificationSenderJob>()
-            .WithIdentity(appointmentId.ToString()).UsingJobData(new Quartz.JobDataMap(jobData))
+            .WithIdentity(appointment.Id.ToString()).UsingJobData(new Quartz.JobDataMap(jobData))
             .Build();
 
             ITrigger trigger = TriggerBuilder.Create()
-            .WithIdentity(appointmentId.ToString())
+            .WithIdentity(appointment.Id.ToString())
             .StartAt((DateTimeOffset)notificationDateTime)
             .UsingJobData(new Quartz.JobDataMap(jobData))
             .Build();

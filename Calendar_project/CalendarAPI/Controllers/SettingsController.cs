@@ -1,3 +1,4 @@
+using CalendarAPI.DataTypes;
 using CalendarAPI.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Toolkit.Uwp.Notifications;
@@ -18,7 +19,7 @@ namespace CalendarAPI.Controllers
         public void Post(string operation)
         {
             if(operation == "schedule")
-                _schedulingService.ScheduleNotification("AAAAAA", 999, DateTime.UtcNow.AddMinutes(1));
+                _schedulingService.ScheduleNotification(new Appointment(), DateTime.UtcNow.AddMinutes(1));
             if (operation == "fire")
             {
                 new ToastContentBuilder()
