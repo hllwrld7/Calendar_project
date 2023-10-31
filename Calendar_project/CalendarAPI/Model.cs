@@ -12,6 +12,7 @@ namespace CalendarAPI
 
         public SqliteContext()
         {
+            Database.EnsureCreated();
             var folder = Environment.SpecialFolder.LocalApplicationData;
             var path = Environment.GetFolderPath(folder);
             _dbPath = Path.Join(path);

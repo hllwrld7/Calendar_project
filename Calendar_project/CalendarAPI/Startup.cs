@@ -13,7 +13,7 @@ namespace CalendarAPI
             var schedulingService = app.ApplicationServices.GetService<ISchedulingService>();
             var sqliteService = app.ApplicationServices.GetService<ISQLiteService>();
             ScheduleAppointmentsOnStartup(schedulingService, sqliteService);
-            Process.Start("C:\\Calendar_project\\Calendar_project\\Client\\bin\\Debug\\net6.0-windows\\Client.exe");
+            //Process.Start("C:\\Calendar_project\\Calendar_project\\Client\\bin\\Debug\\net6.0-windows\\Client.exe");
         }
 
         private void ScheduleAppointmentsOnStartup(ISchedulingService schedulingService, ISQLiteService sqliteService)

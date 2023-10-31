@@ -14,7 +14,6 @@ namespace CalendarAPI.Services
         public SQLiteService() 
         {
             _db = new SqliteContext();
-            _db.Database.EnsureCreated();
         }
 
         public List<DataTypes.Appointment> GetAppointments()
@@ -29,13 +28,15 @@ namespace CalendarAPI.Services
 
         public void RemoveAppointment(DataTypes.Appointment appointment)
         {
-            _db.Remove(appointment);
+            var entryToRemove = _db.Appointments.FirstOrDefault(x => x.Id == appointment.Id);
+            _db.Appointments.Remove(entryToRemove);
             _db.SaveChanges();
         }
 
         public void RemoveContact(Contact contact)
         {
-            _db.Remove(contact);
+            var entryToRemove = _db.Contacts.FirstOrDefault(x => x.Id == contact.Id);
+            _db.Contacts.Remove(entryToRemove);
             _db.SaveChanges();
         }
 
